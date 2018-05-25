@@ -7,33 +7,47 @@ object ValidationApplicative extends App {
 
   type Name = String
   type Address = String
+  type ValidationResult[A] = ValidatedNel[ValidationErrors, A]
 
   sealed trait ValidationErrors
-  object NameTooLong extends ValidationErrors
-  object AddressTooLong extends ValidationErrors
+  object ValidationErrors {
+    case object NameTooLong extends ValidationErrors
+    case object AddressTooLong extends ValidationErrors
 
-  type ValidationResult[A] = ValidatedNel[ValidationErrors, A]
+    implicit val validationResultShow: Show[ValidationErrors] = Show.show((errors: ValidationErrors) => s"Custom show: $errors")
+  }
 
   case class Person(firstName: Name, address: Address)
 
-  def getName(len: Int, rawName: String) : ValidationResult[String] =
-    if(rawName.length > len) NameTooLong.invalidNel else rawName.validNel
+  object Person {
+    implicit val showPerson: Show[Person] = Show.show((person: Person) => s"Custom show: ${person.firstName}")
+  }
+
+  import ValidationErrors._
+  import Person._
+
+  def getName(len: Int, rawName: String): ValidationResult[String] =
+    if (rawName.length > len) NameTooLong.invalidNel else rawName.validNel
 
   def getAddress(len: Int, rawAddress: String): ValidationResult[String] =
-    if(rawAddress.length > len) AddressTooLong.invalidNel else rawAddress.validNel
+    if (rawAddress.length > len) AddressTooLong.invalidNel else rawAddress.validNel
 
-  def mkPerson(n: String, a: String) : ValidationResult[Person] = {
-    val person: (Name, Address) => Person = Person.apply
-    (getName(10, n), getAddress(100, a)).mapN(person)
+  def mkPerson(n: String, a: String): ValidationResult[Person] = {
+    (getName(10, n), getAddress(100, a)).mapN(Person.apply)
   }
 
-  implicit val validationResultShow: Show[ValidationErrors] = Show.show(error => error.getClass.getSimpleName)
+  val invalidPerson = mkPerson("basuuuuuuuuuuuuuu", "London")
+  val validPerson = mkPerson("Basu", "blaaah")
 
-  mkPerson("basuuuuuuuuuuuuuu", "London").toEither match {
-    case Right(x) => println(x)
-    case Left(errors) =>
-      println(s"There were errors:")
-      println(errors.show)
-  }
+  processValidated(invalidPerson)
+  processValidated(validPerson)
+
+  private def processValidated(person: ValidationResult[Person]): Unit =
+    person match {
+      case Valid(p) =>
+        println(s"Display the person using cats show ${p.show}")
+      case Invalid(errors) =>
+        println(s"There were errors: ${errors.show}")
+    }
 
 }
