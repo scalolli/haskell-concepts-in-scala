@@ -1,3 +1,5 @@
+package haskell
+
 sealed trait Status
 
 object Status {

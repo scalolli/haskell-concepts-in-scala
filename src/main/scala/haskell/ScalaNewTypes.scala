@@ -1,4 +1,6 @@
-import Status._
+package haskell
+
+import haskell.Status.{Failed, Success}
 
 object ScalaNewTypes extends App {
 

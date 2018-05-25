@@ -1,3 +1,5 @@
+package haskell
+
 import cats.Show
 import cats.data.Validated._
 import cats.data.ValidatedNel
@@ -23,8 +25,8 @@ object ValidationApplicative extends App {
     implicit val showPerson: Show[Person] = Show.show((person: Person) => s"Custom show: ${person.firstName}")
   }
 
-  import ValidationErrors._
   import Person._
+  import ValidationErrors._
 
   def getName(len: Int, rawName: String): ValidationResult[String] =
     if (rawName.length > len) NameTooLong.invalidNel else rawName.validNel
