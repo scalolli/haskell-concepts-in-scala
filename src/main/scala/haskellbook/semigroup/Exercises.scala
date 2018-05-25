@@ -1,9 +1,9 @@
-package haskell
+package haskellbook.semigroup
 
 import cats.implicits._
 import cats.kernel.Semigroup
 
-object SemigroupExercises extends App {
+object Exercises extends App {
 
   case class IntegerWrapper(a: Int) extends AnyVal
 

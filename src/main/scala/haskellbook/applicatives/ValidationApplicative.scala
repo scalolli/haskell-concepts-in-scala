@@ -1,4 +1,4 @@
-package haskell
+package haskellbook.applicatives
 
 import cats.Show
 import cats.data.Validated._

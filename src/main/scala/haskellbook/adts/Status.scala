@@ -1,4 +1,4 @@
-package haskell
+package haskellbook.adts
 
 sealed trait Status
 

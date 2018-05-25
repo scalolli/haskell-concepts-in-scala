@@ -1,6 +1,7 @@
-package haskell
+package haskellbook.newtypes
 
-import haskell.Status.{Failed, Success}
+import haskellbook.Status.{Failed, Success}
+import haskellbook.adts.Status
 
 object ScalaNewTypes extends App {
 
