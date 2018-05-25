@@ -1,4 +1,4 @@
-
+import Status._
 
 object ScalaNewTypes extends App {
 
@@ -39,5 +39,16 @@ object ScalaNewTypes extends App {
   def |+|(a: @@[Int, Multiplication], b: @@[Int, Multiplication]): @@[Int, Multiplication] = Tag(a * b)
 
   print(s"Its still just a int: $result")
+
+  val status = Status.Failed
+
+  patternMatch(status)
+
+  def patternMatch(status: Status): Unit = {
+    status match {
+      case s@Success => println(s)
+      case s@Failed => println(s)
+    }
+  }
 
 }
