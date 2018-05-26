@@ -43,4 +43,11 @@ object SemigroupExercises extends App {
           semiA.combine(x.a, y.a)
       )
   }
+
+  case class BoolConj(a: Boolean)
+
+  object BoolConj {
+    implicit def semigroupInstanceForBoolConj: Semigroup[BoolConj] =
+      (a: BoolConj, b: BoolConj) => BoolConj(a.a && b.a)
+  }
 }
