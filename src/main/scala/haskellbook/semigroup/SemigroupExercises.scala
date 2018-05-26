@@ -33,4 +33,14 @@ object SemigroupExercises extends App {
 
   Four(1, 2, 3, 4) |+| Four(2, 3, 4, 5)
   Four("1", "2", "3", "4") |+| Four("2", "3", "4", "5")
+
+  case class Identity[A](a: A) 
+
+  object Identity {
+    implicit def identitySemigroupInstance[A]: Semigroup[Identity[A]] = 
+    (x: Identity[A], y: Identity[A]) => 
+      Identity(
+        implicitly[Semigroup[A]].combine(x.a, y.a)
+      )
+  }
 }
