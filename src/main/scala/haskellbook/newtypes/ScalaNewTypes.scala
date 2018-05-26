@@ -1,14 +1,13 @@
 package haskellbook.newtypes
 
-import haskellbook.Status.{Failed, Success}
 import haskellbook.adts.Status
+import haskellbook.adts.Status.{Failed, Success}
 
 object ScalaNewTypes extends App {
 
   type FName = String
 
   val Fname = "abc"
-  Fname.equals()
 
   // The reason to have a Tag is to do assertions where we have access to the type for e.g below
   // we cannot pass to foo(Integer(1)) but foo(Long(1)) works

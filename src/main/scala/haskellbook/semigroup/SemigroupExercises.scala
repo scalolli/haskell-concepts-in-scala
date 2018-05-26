@@ -3,13 +3,13 @@ package haskellbook.semigroup
 import cats.implicits._
 import cats.kernel.Semigroup
 
-object Exercises extends App {
+object SemigroupExercises extends App {
 
   case class IntegerWrapper(a: Int) extends AnyVal
 
   object IntegerWrapper {
-    implicit def integerWrapperInstance(implicit intInstance: Semigroup[Int]): Semigroup[IntegerWrapper] =
-      (a: IntegerWrapper, b: IntegerWrapper) => IntegerWrapper(intInstance.combine(a.a, b.a))
+    implicit def integerWrapperInstance: Semigroup[IntegerWrapper] =
+      (a: IntegerWrapper, b: IntegerWrapper) => IntegerWrapper(implicitly[Semigroup[Int]].combine(a.a, b.a))
   }
 
   IntegerWrapper(1) |+| IntegerWrapper(2)
