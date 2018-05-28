@@ -1,5 +1,6 @@
 package haskellbook.semigroup
 
+import cats.Show
 import cats.implicits._
 import cats.kernel.Semigroup
 
@@ -49,5 +50,14 @@ object SemigroupExercises extends App {
   object BoolConj {
     implicit def semigroupInstanceForBoolConj: Semigroup[BoolConj] =
       (a: BoolConj, b: BoolConj) => BoolConj(a.a && b.a)
+  }
+
+  class Trivial
+  case object Trivial {
+    implicit def trivialSemigroupInstance: Semigroup[Trivial] = { (x: Trivial, y: Trivial) =>
+      x
+    }
+    implicit def showTrivial: Show[Trivial] =
+      (a: Trivial) => s"Tostring for Trivial using cats.Show ${Trivial.getClass.getSimpleName}"
   }
 }
