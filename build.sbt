@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.5"
 
-scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
+scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings", "-Ypartial-unification")
 
 libraryDependencies ++=
   Seq(

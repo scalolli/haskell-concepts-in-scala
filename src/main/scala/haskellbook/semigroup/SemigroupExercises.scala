@@ -53,11 +53,26 @@ object SemigroupExercises extends App {
   }
 
   class Trivial
-  case object Trivial {
-    implicit def trivialSemigroupInstance: Semigroup[Trivial] = { (x: Trivial, y: Trivial) =>
-      x
-    }
+  object Trivial {
+    implicit def trivialSemigroupInstance: Semigroup[Trivial] = (x: Trivial, y: Trivial) => x
+
     implicit def showTrivial: Show[Trivial] =
       (a: Trivial) => s"Tostring for Trivial using cats.Show ${Trivial.getClass.getSimpleName}"
   }
+
+  sealed trait Or[+A, +B]
+  object Or {
+    case class Fst[A, B](a: A) extends Or[A, B]
+    case class Snd[A, B](b: B) extends Or[A, B]
+
+    implicit def orSemigroupInstance[A, B]: Semigroup[Or[A, B]] =
+      (x: Or[A, B], y: Or[A, B]) =>
+        (x, y) match {
+          case (Fst(a), snd@Fst(b)) => snd
+          case (Fst(a), snd@Snd(b)) => snd
+          case (Snd(a), snd@Snd(b)) => snd
+          case (first@Snd(a), _) => first
+      }
+  }
+
 }

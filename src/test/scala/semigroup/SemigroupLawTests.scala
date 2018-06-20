@@ -3,7 +3,8 @@ package semigroup
 import cats.Eq
 import cats.kernel.laws.discipline.SemigroupTests
 import cats.tests.CatsSuite
-import haskellbook.semigroup.SemigroupExercises.{BoolConj, Four, Identity, Trivial}
+import haskellbook.semigroup.SemigroupExercises.Or._
+import haskellbook.semigroup.SemigroupExercises._
 import org.scalacheck.{Arbitrary, Gen}
 
 class SemigroupLawTests extends CatsSuite {
@@ -36,4 +37,11 @@ class SemigroupLawTests extends CatsSuite {
   implicit def eqTrivial: Eq[Trivial]               = Eq.fromUniversalEquals
   implicit def arbitraryTrivial: Arbitrary[Trivial] = Arbitrary(new Trivial())
   checkAll("semigroup laws for Trivial", SemigroupTests[Trivial].semigroup)
+
+  implicit def eqOr[A: Eq, B: Eq]: Eq[Or[A, B]] = Eq.fromUniversalEquals
+  implicit def arbitraryOr[A: Arbitrary, B: Arbitrary]: Arbitrary[Or[A, B]] =
+    Arbitrary(Gen.oneOf(Arbitrary.arbitrary[A].map(Fst(_)), Arbitrary.arbitrary[B].map(Snd(_))))
+
+  checkAll("SemiGroup laws for Or", SemigroupTests[Or[Int, String]].semigroup(arbitraryOr, eqOr))
+
 }
