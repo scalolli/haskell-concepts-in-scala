@@ -51,24 +51,4 @@ object ValidationApplicative extends App {
       case Invalid(errors) =>
         println(s"There were errors: ${errors.show}")
     }
-
-
-//  val value: Either[String, List[Int]] = Seq("1","2","3").toList.traverse(parseIntEither(_))
-//
-//  def parseIntEither(str: String): Either[String, Int] = Left("broken !!!")
-//
-//  println(value)
-
-//  import cats.Semigroup
-//  import cats.data.{NonEmptyList, OneAnd, Validated, ValidatedNel}
-//  import cats.implicits._
-//
-//  def parseIntEither(s: String): Either[NumberFormatException, Int] =
-//    Either.catchOnly[NumberFormatException](s.toInt)
-//
-//  def parseIntValidated(s: String): ValidatedNel[NumberFormatException, Int] =
-//    Validated.catchOnly[NumberFormatException](s.toInt).toValidatedNel
-//
-//  List("1", "2", "3").traverse(parseIntEither)
-
 }

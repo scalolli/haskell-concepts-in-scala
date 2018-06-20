@@ -4,6 +4,7 @@ import cats.Eq
 import cats.kernel.laws.discipline.SemigroupTests
 import cats.tests.CatsSuite
 import haskellbook.semigroup.SemigroupExercises.Or._
+import haskellbook.semigroup.SemigroupExercises.Validation._
 import haskellbook.semigroup.SemigroupExercises._
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -54,7 +55,15 @@ class SemigroupLawTests extends CatsSuite {
   implicit def eqOr[A: Eq, B: Eq]: Eq[Or[A, B]] = Eq.fromUniversalEquals
   implicit def arbitraryOr[A: Arbitrary, B: Arbitrary]: Arbitrary[Or[A, B]] =
     Arbitrary(Gen.oneOf(Arbitrary.arbitrary[A].map(Fst(_)), Arbitrary.arbitrary[B].map(Snd(_))))
-
   checkAll("SemiGroup laws for Or", SemigroupTests[Or[Int, String]].semigroup(arbitraryOr, eqOr))
 
+  implicit def eqValidation[A: Eq, B: Eq]: Eq[Validation[A, B]] = Eq.fromUniversalEquals
+  implicit def arbitraryValidation[A: Arbitrary, B: Arbitrary]: Arbitrary[Validation[A, B]] = 
+    Arbitrary(
+      Gen.oneOf(
+        Arbitrary.arbitrary[A].map(Seq(_)).map(MyFailure(_)), 
+        Arbitrary.arbitrary[B].map(MySuccess(_))
+        )
+      )
+  checkAll("SemiGroup laws for Validation", SemigroupTests[Validation[String, Int]].semigroup(arbitraryValidation, eqValidation))
 }

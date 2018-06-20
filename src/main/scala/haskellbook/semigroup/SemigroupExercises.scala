@@ -65,8 +65,7 @@ object SemigroupExercises extends App {
     case class Fst[A, B](a: A) extends Or[A, B]
     case class Snd[A, B](b: B) extends Or[A, B]
 
-    implicit def orSemigroupInstance[A, B]: Semigroup[Or[A, B]] =
-      (x: Or[A, B], y: Or[A, B]) =>
+    implicit def orSemigroupInstance[A, B]: Semigroup[Or[A, B]] = (x: Or[A, B], y: Or[A, B]) =>
         (x, y) match {
           case (Fst(a), snd@Fst(b)) => snd
           case (Fst(a), snd@Snd(b)) => snd
@@ -74,5 +73,20 @@ object SemigroupExercises extends App {
           case (first@Snd(a), _) => first
       }
   }
+
+  sealed trait Validation[+A, +B]
+  object Validation {
+    case class MyFailure[A, B](errors: Seq[A]) extends Validation[A, B]
+    case class MySuccess[A, B](b: B) extends Validation[A, B]
+
+    implicit def semiGroupInstanceValidation[A, B](implicit combineB: Semigroup[B]): Semigroup[Validation[A, B]] = (a: Validation[A, B], b: Validation[A, B]) => 
+      (a, b) match {
+        case (MyFailure(l), MyFailure(r)) => MyFailure(l ++ r)
+        case (f@MyFailure(_), _) => f
+        case (_, f@MyFailure(_)) => f
+        case (MySuccess(a), MySuccess(b)) => MySuccess(combineB.combine(a, b))
+      }
+  }
+
 
 }
